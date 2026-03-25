@@ -18,7 +18,7 @@ app.use(express.json());
 const allowedOrigins = [
   'http://localhost:3000',
   'http://localhost:5500',
-  'https://gentle-kleicha-a6cbc0.netlify.app/', // CAMBIARÁS ESTO DESPUÉS
+  'https://gentle-kleicha-a6cbc0.netlify.app', // CAMBIARÁS ESTO DESPUÉS
   process.env.FRONTEND_URL
 ].filter(Boolean);
 
