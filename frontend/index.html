@@ -1,0 +1,813 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Barbería Ébano | Reserva tu cita</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, sans-serif;
+            background-color: #0a0a0a;
+            color: #f0f0f0;
+            overflow-x: hidden;
+            scroll-behavior: smooth;
+        }
+
+        @import url('https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700&display=swap');
+
+        .hero {
+            position: relative;
+            height: 100vh;
+            width: 100%;
+            background: url('https://images.unsplash.com/photo-1585747860715-2ba37e788b70?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80') center center/cover no-repeat;
+            display: flex;
+            align-items: flex-end;
+            justify-content: center;
+            isolation: isolate;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg, rgba(0,0,0,0.75) 0%, rgba(0,0,0,0.6) 50%, rgba(0,0,0,0.85) 100%);
+            z-index: 1;
+        }
+
+        .hero::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 180px;
+            background: linear-gradient(to top, #0a0a0a 0%, rgba(10,10,10,0.85) 40%, transparent 100%);
+            z-index: 2;
+            pointer-events: none;
+        }
+
+        .navbar-top {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            padding: 1.8rem 2.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 30;
+        }
+
+        .menu-btn {
+            background: transparent;
+            border: none;
+            cursor: pointer;
+            width: 32px;
+            height: 24px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            z-index: 50;
+            position: relative;
+        }
+
+        .menu-btn span {
+            display: block;
+            width: 100%;
+            height: 2px;
+            background-color: #f5f5f5;
+            border-radius: 2px;
+            transition: all 0.3s ease;
+        }
+
+        .logo {
+            font-size: 1.7rem;
+            font-weight: 600;
+            letter-spacing: -0.5px;
+            background: linear-gradient(135deg, #FFFFFF 0%, #D4AF37 80%);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            text-decoration: none;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .sidebar {
+            position: fixed;
+            top: 0;
+            left: -100%;
+            width: 300px;
+            max-width: 85%;
+            height: 100%;
+            background-color: #0f0f0f;
+            backdrop-filter: blur(12px);
+            background: rgba(10, 10, 10, 0.97);
+            z-index: 100;
+            transition: left 0.4s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+            box-shadow: 4px 0 25px rgba(0,0,0,0.6);
+            border-right: 1px solid rgba(212, 175, 55, 0.2);
+            padding: 5rem 2rem 2rem;
+        }
+
+        .sidebar.open {
+            left: 0;
+        }
+
+        .sidebar nav ul {
+            list-style: none;
+            margin-top: 2rem;
+        }
+
+        .sidebar nav ul li {
+            margin: 2rem 0;
+        }
+
+        .sidebar nav ul li a {
+            color: #e0e0e0;
+            text-decoration: none;
+            font-size: 1.6rem;
+            font-weight: 500;
+            transition: color 0.2s ease, letter-spacing 0.2s;
+            display: inline-block;
+        }
+
+        .sidebar nav ul li a:hover {
+            color: #D4AF37;
+            letter-spacing: 1px;
+        }
+
+        .close-sidebar {
+            background: none;
+            border: none;
+            color: #fff;
+            font-size: 2.4rem;
+            cursor: pointer;
+            position: absolute;
+            top: 1.2rem;
+            right: 1.5rem;
+            font-weight: 300;
+            transition: transform 0.2s;
+        }
+
+        .close-sidebar:hover {
+            transform: rotate(90deg);
+            color: #D4AF37;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 15;
+            text-align: center;
+            margin-bottom: 12vh;
+            width: 100%;
+            padding: 0 1.5rem;
+        }
+
+        .hero-content h1 {
+            font-size: clamp(2.5rem, 8vw, 4.8rem);
+            font-weight: 600;
+            letter-spacing: -0.02em;
+            margin-bottom: 1rem;
+            text-shadow: 0 2px 15px rgba(0,0,0,0.5);
+        }
+
+        .hero-content p {
+            font-size: clamp(1rem, 4vw, 1.3rem);
+            font-weight: 400;
+            opacity: 0.85;
+            max-width: 600px;
+            margin: 0 auto;
+            color: #e5e5e5;
+        }
+
+        .booking-section {
+            background-color: #0a0a0a;
+            padding: 5rem 1.5rem 6rem;
+            width: 100%;
+        }
+
+        .booking-container {
+            max-width: 700px;
+            margin: 0 auto;
+            background: #111111;
+            border-radius: 32px;
+            padding: 2.2rem 2rem 2.8rem;
+            box-shadow: 0 20px 35px -12px rgba(0,0,0,0.6), inset 0 1px 0 rgba(255,255,255,0.03);
+            border: 1px solid rgba(212, 175, 55, 0.15);
+            transition: all 0.3s;
+        }
+
+        .booking-container h2 {
+            font-size: 2rem;
+            font-weight: 500;
+            margin-bottom: 0.5rem;
+            letter-spacing: -0.3px;
+            color: #f5f5f5;
+        }
+
+        .booking-container h2 span {
+            color: #D4AF37;
+            font-weight: 600;
+        }
+
+        .booking-sub {
+            color: #aaa;
+            margin-bottom: 2rem;
+            font-size: 0.9rem;
+            border-left: 2px solid #D4AF37;
+            padding-left: 0.75rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        input, select, button {
+            font-family: 'Inter', sans-serif;
+        }
+
+        .modern-input {
+            width: 100%;
+            background: #1a1a1a;
+            border: 1px solid #2c2c2c;
+            padding: 0.9rem 1.2rem;
+            font-size: 1rem;
+            border-radius: 20px;
+            color: #f0f0f0;
+            transition: all 0.2s ease;
+            outline: none;
+        }
+
+        .modern-input:focus {
+            border-color: #D4AF37;
+            box-shadow: 0 0 0 2px rgba(212, 175, 55, 0.2);
+            background: #1f1f1f;
+        }
+
+        select.modern-input {
+            cursor: pointer;
+            appearance: none;
+            background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23D4AF37' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+            background-repeat: no-repeat;
+            background-position: right 1rem center;
+            background-size: 1em;
+        }
+
+        .btn-gold {
+            background: linear-gradient(95deg, #D4AF37 0%, #B88D2C 100%);
+            border: none;
+            color: #0a0a0a;
+            font-weight: 600;
+            font-size: 1rem;
+            padding: 0.9rem 1.5rem;
+            border-radius: 40px;
+            width: 100%;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+            letter-spacing: 0.3px;
+            margin-top: 0.5rem;
+            box-shadow: 0 6px 14px rgba(0,0,0,0.3);
+        }
+
+        .btn-gold:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 20px -8px rgba(212,175,55,0.3);
+            background: linear-gradient(95deg, #e2bc3b, #c99e2f);
+        }
+
+        .btn-gold:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        .toast-message {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%) scale(0.9);
+            background: #1E1E1E;
+            backdrop-filter: blur(12px);
+            border-left: 4px solid #D4AF37;
+            border-radius: 60px;
+            padding: 0.9rem 2rem;
+            color: #f0f0f0;
+            font-weight: 500;
+            z-index: 200;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.25s ease;
+            box-shadow: 0 12px 25px rgba(0,0,0,0.5);
+            font-size: 0.95rem;
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+            white-space: nowrap;
+        }
+
+        .toast-message.show {
+            opacity: 1;
+            visibility: visible;
+            transform: translateX(-50%) scale(1);
+        }
+
+        .info-message {
+            text-align: center;
+            margin-top: 1rem;
+            padding: 0.75rem;
+            background: rgba(212, 175, 55, 0.1);
+            border-radius: 12px;
+            font-size: 0.85rem;
+            color: #D4AF37;
+        }
+
+        footer {
+            background: #040404;
+            padding: 2.5rem 1.5rem 1.8rem;
+            border-top: 1px solid rgba(212, 175, 55, 0.2);
+            text-align: center;
+        }
+
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .footer-logo {
+            font-size: 1.6rem;
+            font-weight: 600;
+            background: linear-gradient(135deg, #fff, #D4AF37);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        .social-icons {
+            display: flex;
+            gap: 2rem;
+            margin: 0.5rem 0;
+        }
+
+        .social-icons a {
+            color: #c0c0c0;
+            font-size: 1.5rem;
+            transition: color 0.2s, transform 0.2s;
+            display: inline-block;
+            text-decoration: none;
+        }
+
+        .social-icons a:hover {
+            color: #D4AF37;
+            transform: translateY(-3px);
+        }
+
+        .copyright {
+            font-size: 0.8rem;
+            color: #6b6b6b;
+            margin-top: 0.5rem;
+        }
+
+        @media (max-width: 640px) {
+            .navbar-top {
+                padding: 1.2rem 1.5rem;
+            }
+            .booking-container {
+                padding: 1.5rem;
+            }
+            .hero-content {
+                margin-bottom: 10vh;
+            }
+            .toast-message {
+                white-space: normal;
+                text-align: center;
+                width: 90%;
+                justify-content: center;
+            }
+        }
+    </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+
+    <div class="sidebar" id="sidebar">
+        <button class="close-sidebar" id="closeSidebarBtn" aria-label="Cerrar menú">✕</button>
+        <nav>
+            <ul>
+                <li><a href="#inicio" class="sidebar-link">Inicio</a></li>
+                <li><a href="#citas" class="sidebar-link">Citas</a></li>
+                <li><a href="#contacto" class="sidebar-link">Contacto</a></li>
+            </ul>
+        </nav>
+    </div>
+
+    <section class="hero" id="inicio">
+        <div class="navbar-top">
+            <button class="menu-btn" id="menuBtn" aria-label="Abrir menú">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+            <div class="logo">ÉBANO</div>
+        </div>
+        <div class="hero-content">
+            <h1>Precisión & Estilo</h1>
+            <p>Donde la tradición se encuentra con la vanguardia. Reserva tu experiencia única.</p>
+        </div>
+    </section>
+
+    <section class="booking-section" id="citas">
+        <div class="booking-container">
+            <h2>Reserva tu <span>momento</span></h2>
+            <div class="booking-sub">Selecciona fecha y horario disponible</div>
+            <form id="appointmentForm">
+                <div class="form-group">
+                    <input type="text" id="name" class="modern-input" placeholder="Nombre completo" required autocomplete="name">
+                </div>
+                <div class="form-group">
+                    <input type="date" id="date" class="modern-input" required>
+                </div>
+                <div class="form-group">
+                    <select id="time" class="modern-input" required disabled>
+                        <option value="">Selecciona una fecha primero</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <input type="tel" id="phone" class="modern-input" placeholder="Teléfono / WhatsApp" required autocomplete="tel">
+                </div>
+                <button type="submit" class="btn-gold" id="submitBtn">Agendar cita</button>
+            </form>
+            <div id="infoMessage" class="info-message" style="display: none;"></div>
+        </div>
+    </section>
+
+    <footer id="contacto">
+        <div class="footer-content">
+            <div class="footer-logo">ÉBANO BARBER</div>
+            <div class="social-icons">
+                <a href="#" aria-label="Instagram" target="_blank"><i class="fab fa-instagram"></i></a>
+                <a href="#" aria-label="Facebook" target="_blank"><i class="fab fa-facebook-f"></i></a>
+                <a href="#" aria-label="Twitter" target="_blank"><i class="fab fa-twitter"></i></a>
+            </div>
+            <div class="copyright">
+                © 2025 Ébano Barbería — Estilo atemporal. Todos los derechos reservados.
+            </div>
+        </div>
+    </footer>
+
+    <div id="toastNotification" class="toast-message">
+        <i class="fas fa-check-circle" style="color:#D4AF37;"></i>
+        <span id="toastText">Tu cita ha sido agendada con éxito</span>
+    </div>
+
+    <script>
+        (function() {
+            // ⚠️ IMPORTANTE: CAMBIA ESTA URL DESPUÉS DE DESPLEGAR BACKEND
+            const API_BASE_URL = "https://tu-backend-en-render.onrender.com"; // CAMBIARÁS ESTO
+            
+            const HORARIO_INICIO = "09:00";
+            const HORARIO_FIN = "20:00";
+            const INTERVALO_MINUTOS = 30;
+            
+            const sidebar = document.getElementById('sidebar');
+            const menuBtn = document.getElementById('menuBtn');
+            const closeSidebarBtn = document.getElementById('closeSidebarBtn');
+            const sidebarLinks = document.querySelectorAll('.sidebar-link');
+            const form = document.getElementById('appointmentForm');
+            const toast = document.getElementById('toastNotification');
+            const toastTextSpan = document.getElementById('toastText');
+            const dateInput = document.getElementById('date');
+            const timeSelect = document.getElementById('time');
+            const infoMessageDiv = document.getElementById('infoMessage');
+            const nameInput = document.getElementById('name');
+            const phoneInput = document.getElementById('phone');
+            const submitBtn = document.getElementById('submitBtn');
+
+            let isSubmitting = false;
+
+            function showToast(message, isError = false) {
+                if (!toast) return;
+                toastTextSpan.innerHTML = message;
+                const iconElem = toast.querySelector('i');
+                if (iconElem) {
+                    if (isError) {
+                        iconElem.className = 'fas fa-exclamation-circle';
+                        iconElem.style.color = '#e0a800';
+                        toast.style.borderLeftColor = '#e0a800';
+                    } else {
+                        iconElem.className = 'fas fa-check-circle';
+                        iconElem.style.color = '#D4AF37';
+                        toast.style.borderLeftColor = '#D4AF37';
+                    }
+                }
+                toast.classList.add('show');
+                setTimeout(() => toast.classList.remove('show'), 3500);
+            }
+
+            function generarHorarios() {
+                const horarios = [];
+                const [horaInicio, minInicio] = HORARIO_INICIO.split(':').map(Number);
+                const [horaFin, minFin] = HORARIO_FIN.split(':').map(Number);
+                
+                let horaActual = horaInicio;
+                let minActual = minInicio;
+                
+                while (horaActual < horaFin || (horaActual === horaFin && minActual <= minFin)) {
+                    const horaStr = `${horaActual.toString().padStart(2, '0')}:${minActual.toString().padStart(2, '0')}`;
+                    horarios.push(horaStr);
+                    minActual += INTERVALO_MINUTOS;
+                    if (minActual >= 60) {
+                        horaActual++;
+                        minActual -= 60;
+                    }
+                }
+                return horarios;
+            }
+
+            async function verificarAutenticacion() {
+                try {
+                    const response = await fetch(`${API_BASE_URL}/auth/status`);
+                    if (!response.ok) return false;
+                    const data = await response.json();
+                    return data.authenticated === true;
+                } catch (error) {
+                    console.error("Error verificando autenticación:", error);
+                    return false;
+                }
+            }
+
+            async function cargarDisponibilidad(fecha) {
+                console.log(`🔍 Consultando disponibilidad para: ${fecha}`);
+                
+                try {
+                    const response = await fetch(`${API_BASE_URL}/disponibilidad?fecha=${fecha}`);
+                    
+                    if (response.status === 401) {
+                        timeSelect.innerHTML = '<option value="">⚠️ Error de autenticación</option>';
+                        timeSelect.disabled = true;
+                        infoMessageDiv.style.display = 'block';
+                        infoMessageDiv.innerHTML = '⚠️ El sistema necesita reconectarse con Google Calendar. Contacta al administrador.';
+                        infoMessageDiv.style.color = '#e0a800';
+                        return false;
+                    }
+                    
+                    if (!response.ok) {
+                        const errorData = await response.json().catch(() => ({}));
+                        throw new Error(errorData.error || `Error HTTP: ${response.status}`);
+                    }
+                    
+                    const data = await response.json();
+                    
+                    if (!data.disponible) {
+                        timeSelect.innerHTML = '<option value="">No hay horarios disponibles</option>';
+                        timeSelect.disabled = true;
+                        infoMessageDiv.style.display = 'block';
+                        infoMessageDiv.innerHTML = '⚠️ Este día no está disponible para agendar citas.';
+                        infoMessageDiv.style.color = '#e0a800';
+                        return false;
+                    }
+                    
+                    const todosHorarios = generarHorarios();
+                    const horasOcupadas = data.horasOcupadas || [];
+                    const horariosDisponibles = todosHorarios.filter(hora => !horasOcupadas.includes(hora));
+                    
+                    if (horariosDisponibles.length === 0) {
+                        timeSelect.innerHTML = '<option value="">No hay horarios disponibles</option>';
+                        timeSelect.disabled = true;
+                        infoMessageDiv.style.display = 'block';
+                        infoMessageDiv.innerHTML = '⚠️ Todos los horarios están ocupados para este día.';
+                        infoMessageDiv.style.color = '#e0a800';
+                        return false;
+                    }
+                    
+                    timeSelect.innerHTML = '<option value="">Selecciona un horario</option>';
+                    horariosDisponibles.forEach(hora => {
+                        const option = document.createElement('option');
+                        option.value = hora;
+                        option.textContent = hora;
+                        timeSelect.appendChild(option);
+                    });
+                    
+                    timeSelect.disabled = false;
+                    infoMessageDiv.style.display = 'none';
+                    return true;
+                    
+                } catch (error) {
+                    console.error("❌ Error:", error);
+                    timeSelect.innerHTML = '<option value="">Error al cargar horarios</option>';
+                    timeSelect.disabled = true;
+                    infoMessageDiv.style.display = 'block';
+                    infoMessageDiv.innerHTML = '❌ Error al conectar con el servidor.';
+                    infoMessageDiv.style.color = '#e0a800';
+                    showToast("Error al cargar disponibilidad", true);
+                    return false;
+                }
+            }
+
+            async function sendAppointmentToBackend(appointment) {
+                const response = await fetch(`${API_BASE_URL}/crear-cita`, {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "Accept": "application/json"
+                    },
+                    body: JSON.stringify(appointment)
+                });
+
+                let data;
+                const contentType = response.headers.get("content-type");
+                if (contentType && contentType.includes("application/json")) {
+                    data = await response.json();
+                } else {
+                    const text = await response.text();
+                    throw new Error("El servidor respondió con un formato inválido");
+                }
+
+                if (!response.ok) {
+                    throw new Error(data.error || data.message || `Error ${response.status}`);
+                }
+
+                return data;
+            }
+
+            async function handleAppointmentSubmit(event) {
+                event.preventDefault();
+                
+                if (isSubmitting) {
+                    showToast("Por favor espera, ya se está procesando...", false);
+                    return;
+                }
+
+                const name = nameInput ? nameInput.value.trim() : '';
+                const date = dateInput ? dateInput.value : '';
+                const time = timeSelect ? timeSelect.value : '';
+                const phone = phoneInput ? phoneInput.value.trim() : '';
+
+                if (!name || !date || !time || !phone) {
+                    showToast("Por favor completa todos los campos.", true);
+                    return;
+                }
+
+                if (name.length < 2) {
+                    showToast("Nombre inválido. Mínimo 2 caracteres.", true);
+                    return;
+                }
+
+                const phoneRegex = /^[0-9+\-\s()]{7,20}$/;
+                if (!phoneRegex.test(phone)) {
+                    showToast("Teléfono inválido.", true);
+                    return;
+                }
+
+                const today = new Date();
+                today.setHours(0, 0, 0, 0);
+                const selectedDate = new Date(date);
+                
+                if (selectedDate < today) {
+                    showToast("No se pueden agendar citas en fechas pasadas.", true);
+                    return;
+                }
+
+                const [hora, minuto] = time.split(':').map(Number);
+                if (hora < 9 || hora > 20 || (hora === 20 && minuto > 0)) {
+                    showToast("Horario no válido. Las citas son de 9:00 a 20:00.", true);
+                    return;
+                }
+                
+                if (minuto !== 0 && minuto !== 30) {
+                    showToast("Las citas solo se pueden agendar cada 30 minutos.", true);
+                    return;
+                }
+
+                isSubmitting = true;
+                const originalBtnText = submitBtn ? submitBtn.innerText : "Agendar Cita";
+                if (submitBtn) {
+                    submitBtn.innerText = "⏳ Procesando...";
+                    submitBtn.disabled = true;
+                }
+
+                try {
+                    const result = await sendAppointmentToBackend({ name, date, time, phone });
+                    
+                    if (result && result.success === true) {
+                        showToast("✨ ¡Tu cita ha sido agendada con éxito! Te esperamos.", false);
+                        if (form) form.reset();
+                        
+                        const todayISO = new Date().toISOString().split('T')[0];
+                        if (dateInput) dateInput.min = todayISO;
+                        
+                        if (timeSelect) {
+                            timeSelect.innerHTML = '<option value="">Selecciona una fecha primero</option>';
+                            timeSelect.disabled = true;
+                        }
+                        if (infoMessageDiv) infoMessageDiv.style.display = 'none';
+                    }
+                } catch (error) {
+                    console.error("❌ Error:", error);
+                    let errorMessage = error.message;
+                    
+                    if (error.message.includes("Failed to fetch")) {
+                        errorMessage = "No se pudo conectar con el servidor.";
+                    } else if (error.message.includes("409")) {
+                        errorMessage = "Este horario ya está ocupado.";
+                    }
+                    
+                    showToast(errorMessage, true);
+                } finally {
+                    isSubmitting = false;
+                    if (submitBtn) {
+                        submitBtn.innerText = originalBtnText;
+                        submitBtn.disabled = false;
+                    }
+                }
+            }
+
+            // Eventos
+            if (dateInput) {
+                const todayFormatted = new Date().toISOString().split('T')[0];
+                dateInput.min = todayFormatted;
+                
+                dateInput.addEventListener('change', async (e) => {
+                    const fechaSeleccionada = e.target.value;
+                    if (fechaSeleccionada) {
+                        await cargarDisponibilidad(fechaSeleccionada);
+                    } else {
+                        if (timeSelect) {
+                            timeSelect.innerHTML = '<option value="">Selecciona una fecha primero</option>';
+                            timeSelect.disabled = true;
+                        }
+                    }
+                });
+            }
+
+            if (form) {
+                form.addEventListener('submit', handleAppointmentSubmit);
+            }
+
+            // Sidebar
+            function openSidebar() {
+                if (sidebar) {
+                    sidebar.classList.add('open');
+                    document.body.style.overflow = 'hidden';
+                }
+            }
+
+            function closeSidebar() {
+                if (sidebar) {
+                    sidebar.classList.remove('open');
+                    document.body.style.overflow = '';
+                }
+            }
+
+            if (menuBtn) menuBtn.addEventListener('click', openSidebar);
+            if (closeSidebarBtn) closeSidebarBtn.addEventListener('click', closeSidebar);
+            
+            if (sidebarLinks) {
+                sidebarLinks.forEach(link => {
+                    link.addEventListener('click', (e) => {
+                        const targetId = link.getAttribute('href');
+                        if (targetId && targetId !== '#') {
+                            e.preventDefault();
+                            const targetElement = document.querySelector(targetId);
+                            if (targetElement) {
+                                closeSidebar();
+                                setTimeout(() => targetElement.scrollIntoView({ behavior: 'smooth', block: 'start' }), 200);
+                            } else {
+                                closeSidebar();
+                            }
+                        } else {
+                            closeSidebar();
+                        }
+                    });
+                });
+            }
+
+            document.addEventListener('click', (e) => {
+                if (sidebar && sidebar.classList.contains('open') && 
+                    !sidebar.contains(e.target) && 
+                    e.target !== menuBtn && 
+                    menuBtn && !menuBtn.contains(e.target)) {
+                    closeSidebar();
+                }
+            });
+
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'Escape' && sidebar && sidebar.classList.contains('open')) {
+                    closeSidebar();
+                }
+            });
+
+            console.log("✅ Barbería Ébano — Sistema de citas");
+            console.log(`🔌 Backend: ${API_BASE_URL}`);
+        })();
+    </script>
+</body>
+</html>
